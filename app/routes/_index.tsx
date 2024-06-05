@@ -1,7 +1,7 @@
 import type { MetaFunction } from "@remix-run/node";
 
 import { useDisclosure } from '@mantine/hooks';
-import { Table, Checkbox, Stack, Divider, SimpleGrid, Modal, PinInput } from "@mantine/core";
+import { Table, Checkbox, Stack, Divider, SimpleGrid, Modal, PinInput, Notification, Center } from "@mantine/core";
 import { useState } from "react";
 
 export const meta: MetaFunction = () => {
@@ -115,6 +115,7 @@ function PersonModal(props: { isModalOpen: boolean, closeModal: () => void, whos
 
   // console.log('props.isModalOpen:', props.isModalOpen, '|', props.isModalOpen)
   // console.log('%cPerson:', 'color:limegreen', props.whoseModal);
+  const [isCorrectPin, setIsCorrectPin] = useState<boolean | null>(null);
 
   return (
     <Modal
@@ -122,17 +123,35 @@ function PersonModal(props: { isModalOpen: boolean, closeModal: () => void, whos
       opened={props.isModalOpen}
       onClose={props.closeModal}
       title={`Hi ${props.whoseModal?.firstName}, please verify yourself.`}>
+      <Center>
+      <Stack>
+      {isCorrectPin !== null &&
+      <Notification
+        title="Incorrect"
+        color="#BF3939"
+        style={{
+          background: "rgba(191, 57, 57, 0.25)",
+          // color: "black",
+          // description: {background: "black" }
+        }}>
+          {!isCorrectPin && 'Please Try again'}
+      </Notification>}
       <PinInput
         mask
         size="xl"
         type="number"
         onChange={(value) => {
           if (value === props.whoseModal?.pin) {
-            console.log('%cGOT IT!', 'color:tomato', props.whoseModal.pin)}
+            console.log('%cGOT IT!', 'color:tomato', props.whoseModal.pin)
             // props.closeModal();
           }
-        }
+          if (value.length === 4 && value !== props.whoseModal?.pin) {
+            setIsCorrectPin(false);
+          }
+        }}
       />
+      </Stack>
+      </Center>
     </Modal>
   )
 }
