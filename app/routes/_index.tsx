@@ -14,6 +14,7 @@ export const meta: MetaFunction = () => {
 type Person = {
   firstName: string;
   pin: string;
+  color?: string;
   [key: number]: string | boolean | number;
 }
 
@@ -29,14 +30,14 @@ type Person = {
 // ];
 
 const people: Person[] = [
-  { firstName: 'Paige', 'pin': '0551', 1: false, 2: true, 3: false, 4: false, 5: false, 6: false, 7: false, 8: false, 9: false, 10: false, 11: false, 12: false, 13: false, 14: false, 15: false, 16: false, 17: false, 18: false, 19: false, 20: false, 21: false, 22: false, 23: false, 24: false, 25: false, 26: false, 27: false, 28: false, 29: false, 30: false },
+  { firstName: 'Paige', 'pin': '0551', 1: false, 2: true, 3: false, 4: false, 5: false, 6: true, 7: false, 8: false, 9: false, 10: false, 11: false, 12: false, 13: false, 14: false, 15: false, 16: false, 17: false, 18: false, 19: false, 20: false, 21: false, 22: false, 23: false, 24: false, 25: false, 26: false, 27: false, 28: false, 29: false, 30: false },
   { firstName: 'Grace', 'pin': '1109', 1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: false, 8: false, 9: false, 10: false, 11: false, 12: false, 13: false, 14: false, 15: false, 16: false, 17: false, 18: false, 19: false, 20: false, 21: false, 22: false, 23: false, 24: false, 25: false, 26: false, 27: false, 28: false, 29: false, 30: false },
   { firstName: 'Amy', 'pin': '9366', 1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: false, 8: false, 9: false, 10: false, 11: false, 12: false, 13: false, 14: false, 15: false, 16: false, 17: false, 18: false, 19: false, 20: false, 21: false, 22: false, 23: false, 24: false, 25: false, 26: false, 27: false, 28: false, 29: false, 30: false },
   { firstName: 'Amir', 'pin': '2886', 1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: false, 8: false, 9: false, 10: false, 11: false, 12: false, 13: false, 14: false, 15: false, 16: false, 17: false, 18: false, 19: false, 20: false, 21: false, 22: false, 23: false, 24: false, 25: false, 26: false, 27: false, 28: false, 29: false, 30: false },
   // { firstName: 'Jose', 'pin': '4623', 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, 7: false, 8: false, 9: false, 10: false, 11: false, 12: false, 13: false, 14: false, 15: false, 16: false, 17: false, 18: false, 19: false, 20: false, 21: false, 22: false, 23: false, 24: false, 25: false, 26: false, 27: false, 28: false, 29: false, 30: false },
-  { firstName: 'Jules', 'pin': '1640', 1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: false, 8: false, 9: false, 10: false, 11: false, 12: false, 13: false, 14: false, 15: false, 16: false, 17: false, 18: false, 19: false, 20: false, 21: false, 22: false, 23: false, 24: false, 25: false, 26: false, 27: false, 28: false, 29: false, 30: false },
-  { firstName: 'Brad', 'pin': '8428', 1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: false, 8: false, 9: false, 10: false, 11: false, 12: false, 13: false, 14: false, 15: false, 16: false, 17: false, 18: false, 19: false, 20: false, 21: false, 22: false, 23: false, 24: false, 25: false, 26: false, 27: false, 28: false, 29: false, 30: false },
-  { firstName: 'Ramon', 'pin': '8220', 1: false, 2: false, 3: true, 4: false, 5: false, 6: false, 7: false, 8: false, 9: false, 10: false, 11: false, 12: false, 13: false, 14: false, 15: false, 16: false, 17: false, 18: false, 19: false, 20: false, 21: false, 22: false, 23: false, 24: false, 25: false, 26: false, 27: false, 28: false, 29: false, 30: false },
+  { firstName: 'Jules', 'pin': '1640', color: '#F2AA52', 1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: false, 8: false, 9: false, 10: false, 11: false, 12: false, 13: false, 14: false, 15: false, 16: false, 17: false, 18: false, 19: false, 20: false, 21: false, 22: false, 23: false, 24: false, 25: false, 26: false, 27: false, 28: false, 29: false, 30: false },
+  { firstName: 'Brad', 'pin': '8428', color: '#448C42', 1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: false, 8: false, 9: false, 10: false, 11: false, 12: false, 13: false, 14: false, 15: false, 16: false, 17: false, 18: false, 19: false, 20: false, 21: false, 22: false, 23: false, 24: false, 25: false, 26: false, 27: false, 28: false, 29: false, 30: false },
+  { firstName: 'Ramon', 'pin': '8220', 1: false, 2: false, 3: true, 4: false, 5: false, 6: true, 7: false, 8: false, 9: false, 10: false, 11: false, 12: false, 13: false, 14: false, 15: false, 16: false, 17: false, 18: false, 19: false, 20: false, 21: false, 22: false, 23: false, 24: false, 25: false, 26: false, 27: false, 28: false, 29: false, 30: false },
 ];
 
 const dayColumns = [
@@ -55,13 +56,14 @@ function GridView(props: { openModal: (person: Person) => void }) {
   const rows = people.map((person) => (
     <Table.Tr key={person.firstName}>
       <Table.Td>{person.firstName}</Table.Td>
-      {Object.keys(person).filter(key => key !== 'firstName' && key !== 'pin').map(key => {
+      {Object.keys(person).filter(key => key !== 'firstName' && key !== 'pin' && key !== 'color').map(key => {
       {/* {Object.keys(person).map(key => { */}
         // console.log('%ckey', 'color:tomato', typeof key)
         return (
         <Table.Td key={key}>
           <Checkbox
-            color="#448C42"
+            // color="gray"
+            color={person.color ? person.color : 'gray'}
             // readOnly={false}
             // checked={person[key] as boolean}
             // checked={dayNumber >= parseInt(key) ? person[key] as boolean : false}
@@ -92,7 +94,7 @@ function GridView(props: { openModal: (person: Person) => void }) {
         color: "white",
       }}>
       <Table.ScrollContainer minWidth={500} style={{ width: "70%" }}>
-        <Table style={{ border: "5px solid #448C42", width: "50%" }}>
+        <Table style={{ border: "5px solid gray", width: "50%" }}>
           <Table.Thead></Table.Thead>
           <Table.Thead>
             <Table.Tr>
