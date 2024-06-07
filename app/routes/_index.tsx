@@ -1,8 +1,10 @@
+import { useState } from "react";
+
 import type { MetaFunction } from "@remix-run/node";
 
 import { useDisclosure } from '@mantine/hooks';
-import { Table, Checkbox, Stack, Divider, SimpleGrid, Modal, PinInput, Notification, Center } from "@mantine/core";
-import { useState } from "react";
+import { lighten, Table, Checkbox, Stack, Divider, SimpleGrid, Modal, PinInput, Notification, Center } from "@mantine/core";
+import { IconExclamationCircle, IconExclamationMark } from '@tabler/icons-react';
 
 export const meta: MetaFunction = () => {
   return [
@@ -33,7 +35,7 @@ const people: Person[] = [
   { firstName: 'Paige', 'pin': '0551', 1: false, 2: true, 3: false, 4: false, 5: false, 6: true, 7: false, 8: false, 9: false, 10: false, 11: false, 12: false, 13: false, 14: false, 15: false, 16: false, 17: false, 18: false, 19: false, 20: false, 21: false, 22: false, 23: false, 24: false, 25: false, 26: false, 27: false, 28: false, 29: false, 30: false },
   { firstName: 'Grace', 'pin': '1109', color: 'skyblue', 1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true, 8: false, 9: false, 10: false, 11: false, 12: false, 13: false, 14: false, 15: false, 16: false, 17: false, 18: false, 19: false, 20: false, 21: false, 22: false, 23: false, 24: false, 25: false, 26: false, 27: false, 28: false, 29: false, 30: false },
   { firstName: 'Amy', 'pin': '9366', 1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: false, 8: false, 9: false, 10: false, 11: false, 12: false, 13: false, 14: false, 15: false, 16: false, 17: false, 18: false, 19: false, 20: false, 21: false, 22: false, 23: false, 24: false, 25: false, 26: false, 27: false, 28: false, 29: false, 30: false },
-  { firstName: 'Amir', 'pin': '2886', 1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: false, 8: false, 9: false, 10: false, 11: false, 12: false, 13: false, 14: false, 15: false, 16: false, 17: false, 18: false, 19: false, 20: false, 21: false, 22: false, 23: false, 24: false, 25: false, 26: false, 27: false, 28: false, 29: false, 30: false },
+  { firstName: 'Amir', 'pin': '2886', 1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true, 8: false, 9: false, 10: false, 11: false, 12: false, 13: false, 14: false, 15: false, 16: false, 17: false, 18: false, 19: false, 20: false, 21: false, 22: false, 23: false, 24: false, 25: false, 26: false, 27: false, 28: false, 29: false, 30: false },
   // { firstName: 'Jose', 'pin': '4623', 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, 7: false, 8: false, 9: false, 10: false, 11: false, 12: false, 13: false, 14: false, 15: false, 16: false, 17: false, 18: false, 19: false, 20: false, 21: false, 22: false, 23: false, 24: false, 25: false, 26: false, 27: false, 28: false, 29: false, 30: false },
   { firstName: 'Jules', 'pin': '1640', color: '#F2AA52', 1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true, 8: false, 9: false, 10: false, 11: false, 12: false, 13: false, 14: false, 15: false, 16: false, 17: false, 18: false, 19: false, 20: false, 21: false, 22: false, 23: false, 24: false, 25: false, 26: false, 27: false, 28: false, 29: false, 30: false },
   { firstName: 'Brad', 'pin': '8428', color: '#448C42', 1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true, 8: false, 9: false, 10: false, 11: false, 12: false, 13: false, 14: false, 15: false, 16: false, 17: false, 18: false, 19: false, 20: false, 21: false, 22: false, 23: false, 24: false, 25: false, 26: false, 27: false, 28: false, 29: false, 30: false },
@@ -118,6 +120,10 @@ function PersonModal(props: { isModalOpen: boolean, closeModal: () => void, whos
   // console.log('props.isModalOpen:', props.isModalOpen, '|', props.isModalOpen)
   // console.log('%cPerson:', 'color:limegreen', props.whoseModal);
   const [isCorrectPin, setIsCorrectPin] = useState<boolean | null>(null);
+  const [showNotification, setShowNotification] = useState<boolean | null>(true);
+  // const exclamationIcon = <IconExclamationCircle />
+  const exclamationMark = <IconExclamationMark />
+  
 
   return (
     <Modal
@@ -127,17 +133,30 @@ function PersonModal(props: { isModalOpen: boolean, closeModal: () => void, whos
       title={`Hi ${props.whoseModal?.firstName}, please verify yourself.`}>
       <Center>
       <Stack>
-      {isCorrectPin !== null &&
+      {/* {isCorrectPin !== null &&
       <Notification
-        title="Incorrect"
-        color="#BF3939"
+        title="Ah Dang!"
+        icon={exclamationMark}
+        color={lighten('#BF3939', 0.3)}
+        // variant="filled"
+        // withBorder
         style={{
-          background: "rgba(191, 57, 57, 0.25)",
-          // color: "black",
-          // description: {background: "black" }
-        }}>
-          {!isCorrectPin && 'Please Try again'}
-      </Notification>}
+        }}
+        onClose={() => console.log('close!')}>
+          Please Try again
+      </Notification>} */}
+      {showNotification &&
+        <Notification
+          title="Ah Dang!"
+          icon={exclamationMark}
+          color={lighten('#BF3939', 0.3)}
+          // variant="filled"
+          // withBorder
+          style={{
+          }}
+          onClose={() => setShowNotification(false)}>
+            Please Try again
+        </Notification>}
       <PinInput
         mask
         size="xl"
