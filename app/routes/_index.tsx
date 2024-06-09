@@ -77,19 +77,12 @@ function GridView(props: { openModal: (person: Person) => void }) {
     <Table.Tr key={person.firstName}>
       <Table.Td>{person.firstName}</Table.Td>
       {Object.keys(person).filter(key => key !== 'firstName' && key !== 'pin' && key !== 'color').map(key => {
-      {/* {Object.keys(person).map(key => { */}
-        // console.log('%ckey', 'color:tomato', typeof key)
         return (
         <Table.Td key={key}>
           <Checkbox
-            // color="gray"
             color={person.color ? person.color : 'gray'}
-            // readOnly={false}
-            // checked={person[key] as boolean}
-            // checked={dayNumber >= parseInt(key) ? person[key] as boolean : false}
             checked={dayNumber >= parseInt((key)) ? person[(key as any)] as boolean : false}
             onChange={() => {
-              // console.log(`${person.firstName}:`, person['pin'])
               if (dayNumber === parseInt(key)) {
                 props.openModal(person);
               }
@@ -97,11 +90,21 @@ function GridView(props: { openModal: (person: Person) => void }) {
             />
         </Table.Td>)
       })}
-      {/* {Object.keys(member).filter(key => key !== 'firstName').map(key => {
-        return <Table.Td><Checkbox checked={member[key] as boolean} color="#448C42" /></Table.Td>
-      })} */}
     </Table.Tr>
   ));
+
+  const { students } = useLoaderData() as { students: [] };
+  console.log('%cstudents', 'background:teal', students)
+
+  const studentRows = students.map((student: { first_name: string, color: string }, index: number) => {
+    return (
+      <React.Fragment key={index}>
+        <StudentRow student={student} openModal={props.openModal} />
+      </React.Fragment>
+    )
+  })
+
+  // console.log('%cstudentRows:', 'background:brown', studentRows)
 
   return (
     <main
@@ -125,7 +128,8 @@ function GridView(props: { openModal: (person: Person) => void }) {
               ))}
             </Table.Tr>
           </Table.Thead>
-          <Table.Tbody>{rows}</Table.Tbody>
+          {/* <Table.Tbody>{rows}</Table.Tbody> */}
+          <Table.Tbody>{studentRows}</Table.Tbody>
         </Table>
       </Table.ScrollContainer>
     </main>
@@ -196,9 +200,52 @@ function PersonModal(props: { isModalOpen: boolean, closeModal: () => void, whos
 }
 
 // function StudentRow({ params }: any ) {
-function StudentRow(props: { student: { first_name: string }} ) {
+function StudentRow(props: {
+    student: { first_name: string, color: string }
+    openModal: (student: any) => void
+  }) {
   console.log('student:', 'color:fuchsia', props.student)
-  return <div>{props.student.first_name}</div>
+
+  const today = new Date();
+  const dayNumber = parseInt(String(today.getDate()).padStart(2, '0'))
+
+  return (
+    <Table.Tr>
+      <Table.Td>{props.student.first_name}</Table.Td>
+      {Object.keys(props.student)
+        .filter(column => column != 'first_name' && column !== 'color' && column !== 'pin' )
+        .map(column => {
+          console.log('%ccolumn:', 'color:tomato', column)
+          return (
+            <Table.Td key={column}>
+              <Checkbox
+                color={props.student.color ? props.student.color : 'gray'}
+                checked={dayNumber >= parseInt((column)) ? (props.student as any)[(column as any)] as boolean : false}
+                onChange={() => {
+                  if (dayNumber === parseInt(column)) {
+                    props.openModal(props.student);
+                  }
+                }}
+                />
+            </Table.Td>
+          )
+        })}
+      {/* {Object.keys(person).filter(key => key !== 'firstName' && key !== 'pin' && key !== 'color').map(key => {
+        return (
+        <Table.Td key={key}>
+          <Checkbox
+            color={props.student.color ? person.color : 'gray'}
+            checked={dayNumber >= parseInt((key)) ? person[(key as any)] as boolean : false}
+            onChange={() => {
+              if (dayNumber === parseInt(key)) {
+                props.openModal(person);
+              }
+            }}
+            />
+        </Table.Td>)
+      })} */}
+    </Table.Tr>
+  )
 }
 
 export default function Index() {
@@ -216,20 +263,17 @@ export default function Index() {
   const handleCloseModal = () => {
     close();
   }
-
-  const { students } = useLoaderData() as { students: [] };
-  console.log('%cstudents', 'background:teal', students)
   
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <h1 style={{ textAlign: "center" }}>Aládùn Pratomic Challenge</h1>
-      {students.map((student: { first_name: string }, index: number) => {
+      {/* {students.map((student: { first_name: string }, index: number) => {
         return (
           <React.Fragment key={index}>
             <StudentRow student={student} />
           </React.Fragment>
         )
-      })}
+      })} */}
       <Divider />
       {/* <GridView openModal={handleOpenModal} />
       <PersonModal isModalOpen={isModalOpen} /> */}
