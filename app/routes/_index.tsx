@@ -1,16 +1,34 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
+import { useLoaderData } from "@remix-run/react";
 import type { MetaFunction } from "@remix-run/node";
 
 import { useDisclosure } from '@mantine/hooks';
 import { lighten, Table, Checkbox, Stack, Divider, SimpleGrid, Modal, PinInput, Notification, Center } from "@mantine/core";
 import { IconExclamationCircle, IconExclamationMark } from '@tabler/icons-react';
+// import { getStudents } from "~/data";
+import supabase from "~/utils/supabase";
 
 export const meta: MetaFunction = () => {
   return [
     { title: "New Remix App" },
     { name: "description", content: "Welcome to Remix!" },
   ];
+};
+
+export const loader = async () => {
+  const { data: students, error } = await supabase
+    .from('students')
+    .select('*');
+
+  console.log('data:', students)
+  if (error) {
+    console.log('error:', error.message)
+  }
+
+  return {
+    students
+  }
 };
 
 type Person = {
@@ -177,6 +195,12 @@ function PersonModal(props: { isModalOpen: boolean, closeModal: () => void, whos
   )
 }
 
+// function StudentRow({ params }: any ) {
+function StudentRow(props: { student: { first_name: string }} ) {
+  console.log('student:', 'color:fuchsia', props.student)
+  return <div>{props.student.first_name}</div>
+}
+
 export default function Index() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [opened, { open, close }] = useDisclosure(false);
@@ -193,11 +217,19 @@ export default function Index() {
     close();
   }
 
-  // const toggleOpenModal
+  const { students } = useLoaderData() as { students: [] };
+  console.log('%cstudents', 'background:teal', students)
   
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <h1 style={{ textAlign: "center" }}>Aládùn Pratomic Challenge</h1>
+      {students.map((student: { first_name: string }, index: number) => {
+        return (
+          <React.Fragment key={index}>
+            <StudentRow student={student} />
+          </React.Fragment>
+        )
+      })}
       <Divider />
       {/* <GridView openModal={handleOpenModal} />
       <PersonModal isModalOpen={isModalOpen} /> */}
