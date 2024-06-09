@@ -4,7 +4,8 @@ import { useLoaderData } from "@remix-run/react";
 import type { MetaFunction } from "@remix-run/node";
 
 import { useDisclosure } from '@mantine/hooks';
-import { lighten, Table, Checkbox, Stack, Divider, SimpleGrid, Modal, PinInput, Notification, Center } from "@mantine/core";
+import { lighten, Table, Checkbox, Stack, Divider, SimpleGrid, Modal,
+  PinInput, Notification, Center, Button } from "@mantine/core";
 import { IconExclamationCircle, IconExclamationMark } from '@tabler/icons-react';
 // import { getStudents } from "~/data";
 import supabase from "~/utils/supabase";
@@ -136,7 +137,7 @@ function GridView(props: { openModal: (person: Person) => void }) {
   )
 }
 
-function PersonModal(props: { isModalOpen: boolean, closeModal: () => void, whoseModal: null | Person }) {
+function PersonModal(props: { isModalOpen: boolean, closeModal: () => void, whoseModal: null | any }) {
   // const [opened, { open, close }] = useDisclosure(false);
 
   // console.log('props.isModalOpen:', props.isModalOpen, '|', props.isModalOpen)
@@ -145,14 +146,27 @@ function PersonModal(props: { isModalOpen: boolean, closeModal: () => void, whos
   const [showNotification, setShowNotification] = useState<boolean | null>(true);
   // const exclamationIcon = <IconExclamationCircle />
   const exclamationMark = <IconExclamationMark />
+
+  const today = new Date();
+  const dayNumber = parseInt(String(today.getDate()).padStart(2, '0'));
   
+  const handleUpdateLog = async () => {
+    const { error } = await supabase
+      .from('students')
+      .update({ [dayNumber]: true })
+      .eq('first_name', props.whoseModal?.first_name)
+    
+    console.log('%cerror', 'background:tomato', error);
+  }
+
+  console.log(today.toDateString())
 
   return (
     <Modal
       size="lg"
       opened={props.isModalOpen}
       onClose={props.closeModal}
-      title={`Hi ${props.whoseModal?.firstName}, please verify yourself.`}>
+      title={`Hi ${props.whoseModal?.first_name}, please verify yourself.`}>
       <Center>
       <Stack>
       {/* {isCorrectPin !== null &&
@@ -167,7 +181,7 @@ function PersonModal(props: { isModalOpen: boolean, closeModal: () => void, whos
         onClose={() => console.log('close!')}>
           Please Try again
       </Notification>} */}
-      {showNotification &&
+      {/* {showNotification &&
         <Notification
           title="Ah Dang!"
           icon={exclamationMark}
@@ -178,8 +192,8 @@ function PersonModal(props: { isModalOpen: boolean, closeModal: () => void, whos
           }}
           onClose={() => setShowNotification(false)}>
             Please Try again
-        </Notification>}
-      <PinInput
+        </Notification>} */}
+      {/* <PinInput
         mask
         size="xl"
         type="number"
@@ -192,7 +206,10 @@ function PersonModal(props: { isModalOpen: boolean, closeModal: () => void, whos
             setIsCorrectPin(false);
           }
         }}
-      />
+      /> */}
+      <Button onClick={() => {
+        handleUpdateLog();
+      }}>Update: {today.toDateString()}</Button>
       </Stack>
       </Center>
     </Modal>
@@ -204,7 +221,7 @@ function StudentRow(props: {
     student: { first_name: string, color: string }
     openModal: (student: any) => void
   }) {
-  console.log('student:', 'color:fuchsia', props.student)
+  console.log('%cstudent:', 'color:fuchsia', props.student)
 
   const today = new Date();
   const dayNumber = parseInt(String(today.getDate()).padStart(2, '0'))
@@ -215,7 +232,7 @@ function StudentRow(props: {
       {Object.keys(props.student)
         .filter(column => column != 'first_name' && column !== 'color' && column !== 'pin' )
         .map(column => {
-          console.log('%ccolumn:', 'color:tomato', column)
+          // console.log('%ccolumn:', 'color:tomato', column)
           return (
             <Table.Td key={column}>
               <Checkbox
@@ -253,9 +270,9 @@ export default function Index() {
   const [opened, { open, close }] = useDisclosure(false);
   const [whoseModal, setWhoseModal] = useState<null | Person>(null);
 
-  const handleOpenModal = (person: Person) => {
+  const handleOpenModal = (student: any) => {
     // console.log('%cperson:', 'color:turquoise', person);
-    setWhoseModal(person);
+    setWhoseModal(student);
     // setIsModalOpen(true);
     open();
   }
