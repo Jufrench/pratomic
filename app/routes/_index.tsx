@@ -187,7 +187,7 @@ function UpdateButton(props: { whoseModal: { first_name: string } }) {
   )
 }
 
-function PersonModal(props: { isModalOpen: boolean, closeModal: () => void, whoseModal: null | any }) {
+function StudentModal(props: { isModalOpen: boolean, closeModal: () => void, whoseModal: null | any }) {
   // const [opened, { open, close }] = useDisclosure(false);
   // const [loading, { toggle }] = useDisclosure();
 
@@ -222,6 +222,11 @@ function PersonModal(props: { isModalOpen: boolean, closeModal: () => void, whos
   //   if (didUpdateSucceed) toggle();
   // }, [didUpdateSucceed])
 
+  const [studentVerified, setStudentVerified] = useState<boolean | undefined>(false);
+  const [incorrectPin, setIncorrectPin] = useState<boolean | undefined>(undefined);
+  const [showIncorrectPinAlert, setShowIncorrectPinAlert] = useState<boolean>(false);
+  console.log('%cwhoseModal:', 'color:tomato', props.whoseModal)
+
   return (
     <Modal
       size="lg"
@@ -229,58 +234,40 @@ function PersonModal(props: { isModalOpen: boolean, closeModal: () => void, whos
       onClose={props.closeModal}
       title={`Hi ${props.whoseModal?.first_name}, please verify yourself.`}>
       <Center>
-      {/* <Stack> */}
-      {/* {isCorrectPin !== null &&
-      <Notification
-        title="Ah Dang!"
-        icon={exclamationMark}
-        color={lighten('#BF3939', 0.3)}
-        // variant="filled"
-        // withBorder
-        style={{
-        }}
-        onClose={() => console.log('close!')}>
-          Please Try again
-      </Notification>} */}
-      {/* {showNotification &&
-        <Notification
-          title="Ah Dang!"
-          icon={exclamationMark}
-          color={lighten('#BF3939', 0.3)}
-          // variant="filled"
-          // withBorder
-          style={{
-          }}
-          onClose={() => setShowNotification(false)}>
-            Please Try again
-        </Notification>} */}
-      {/* <PinInput
-        mask
-        size="xl"
-        type="number"
-        onChange={(value) => {
-          if (value === props.whoseModal?.pin) {
-            console.log('%cGOT IT!', 'color:tomato', props.whoseModal.pin)
-            // props.closeModal();
-          }
-          if (value.length === 4 && value !== props.whoseModal?.pin) {
-            setIsCorrectPin(false);
-          }
-        }}
-      /> */}
-      {/* <Button
-        color="#448C42"
-        loading={loading}
-        leftSection={didUpdateSucceed && successIcon}
-        style={{ pointerEvents: didUpdateSucceed ? 'none' : 'unset' }}
-        onClick={() => {
-          toggle();
-          handleUpdateLog();
-        }}>
-          {didUpdateSucceed ? "Update Successful!" : `Update: ${today.toDateString()}`}
-        </Button> */}
-        <UpdateButton whoseModal={props.whoseModal} />
-      {/* </Stack> */}
+        <Stack>
+          {!studentVerified &&
+            <PinInput
+              mask
+              size="xl"
+              type="number"
+              style={{ justifyContent: "center" }}
+              onChange={(value) => {
+                console.log(typeof value)
+                if (value === props.whoseModal?.pin) {
+                  console.log('%cGOT IT!', 'color:tomato', props.whoseModal.pin)
+                  setStudentVerified(true);
+                  setShowIncorrectPinAlert(false);
+                  return;
+                }
+                if (value.length === 4 && value !== props.whoseModal?.pin) {
+                  setIncorrectPin(true);
+                  setShowIncorrectPinAlert(true);
+                }
+                if (value.length === 0) {
+                  setIncorrectPin(undefined);
+                  setShowIncorrectPinAlert(false);
+                }
+              }}
+          />}
+          {studentVerified && <UpdateButton whoseModal={props.whoseModal} />}
+          {showIncorrectPinAlert &&
+            <Alert
+              title="Ah Dang! Incorrect pin. Try again!"
+              color="#BF3939"
+              withCloseButton
+              icon={<IconExclamationCircle />}
+              onClose={() => setShowIncorrectPinAlert(false)} />}
+        </Stack>
       </Center>
     </Modal>
   )
@@ -291,7 +278,7 @@ function StudentRow(props: {
     student: { first_name: string, color: string }
     openModal: (student: any) => void
   }) {
-  console.log('%cstudent:', 'color:fuchsia', props.student)
+  // console.log('%cstudent:', 'color:fuchsia', props.student)
 
   const today = new Date();
   const dayNumber = parseInt(String(today.getDate()).padStart(2, '0'))
@@ -363,10 +350,10 @@ export default function Index() {
       })} */}
       <Divider />
       {/* <GridView openModal={handleOpenModal} />
-      <PersonModal isModalOpen={isModalOpen} /> */}
+      <StudentModal isModalOpen={isModalOpen} /> */}
       {/* =============== */}
       <GridView openModal={handleOpenModal}  />
-      <PersonModal isModalOpen={opened} closeModal={handleCloseModal} whoseModal={whoseModal} />
+      <StudentModal isModalOpen={opened} closeModal={handleCloseModal} whoseModal={whoseModal} />
     </div>
   );
 }
