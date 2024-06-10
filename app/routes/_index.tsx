@@ -166,7 +166,7 @@ function UpdateButton(props: { whoseModal: { first_name: string } }) {
   return (
     <Stack>
       <Button
-        size="md"
+        size="lg"
         color="#448C42"
         loading={loading}
         leftSection={didUpdateSucceed && successIcon}
