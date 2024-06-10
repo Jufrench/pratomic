@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useLoaderData } from "@remix-run/react";
 import type { MetaFunction } from "@remix-run/node";
 
 import { useDisclosure } from '@mantine/hooks';
 import { lighten, Table, Checkbox, Stack, Divider, SimpleGrid, Modal,
-  PinInput, Notification, Center, Button } from "@mantine/core";
-import { IconExclamationCircle, IconExclamationMark } from '@tabler/icons-react';
+  PinInput, Notification, Center, Button, Alert } from "@mantine/core";
+import { IconExclamationCircle, IconExclamationMark, IconCheck, IconInfoSquare } from '@tabler/icons-react';
 // import { getStudents } from "~/data";
 import supabase from "~/utils/supabase";
 
@@ -137,29 +137,90 @@ function GridView(props: { openModal: (person: Person) => void }) {
   )
 }
 
-function PersonModal(props: { isModalOpen: boolean, closeModal: () => void, whoseModal: null | any }) {
-  // const [opened, { open, close }] = useDisclosure(false);
-
-  // console.log('props.isModalOpen:', props.isModalOpen, '|', props.isModalOpen)
-  // console.log('%cPerson:', 'color:limegreen', props.whoseModal);
-  const [isCorrectPin, setIsCorrectPin] = useState<boolean | null>(null);
-  const [showNotification, setShowNotification] = useState<boolean | null>(true);
-  // const exclamationIcon = <IconExclamationCircle />
-  const exclamationMark = <IconExclamationMark />
-
+function UpdateButton(props: { whoseModal: { first_name: string } }) {
   const today = new Date();
   const dayNumber = parseInt(String(today.getDate()).padStart(2, '0'));
-  
+  const successIcon = <IconCheck />
+
+  const [loading, { toggle }] = useDisclosure();
+  const [didUpdateSucceed, setDidUpdateSucceed] = useState<boolean | undefined>(undefined);
+
   const handleUpdateLog = async () => {
-    const { error } = await supabase
+    const { status, error } = await supabase
       .from('students')
       .update({ [dayNumber]: true })
       .eq('first_name', props.whoseModal?.first_name)
-    
-    console.log('%cerror', 'background:tomato', error);
+      
+    if (status === 204) {
+      setDidUpdateSucceed(true);
+      toggle();
+      console.log('loading:', loading)
+    }
+    if (error !== null) setDidUpdateSucceed(false);
   }
 
-  console.log(today.toDateString())
+  useEffect(() => {
+    if (didUpdateSucceed) toggle();
+  }, [didUpdateSucceed])
+
+  return (
+    <Stack>
+      <Button
+        size="md"
+        color="#448C42"
+        loading={loading}
+        leftSection={didUpdateSucceed && successIcon}
+        style={{ pointerEvents: didUpdateSucceed ? 'none' : 'unset' }}
+        onClick={() => {
+          toggle();
+          handleUpdateLog();
+        }}>
+        {didUpdateSucceed ? "Update Successful!" : `Update: ${today.toDateString()}`}
+      </Button>
+      {didUpdateSucceed &&
+        <Alert
+          title="Refresh the page to see updates."
+          icon={<IconInfoSquare />}
+          color="#F2AA52"
+          variant="light" />}
+    </Stack>
+  )
+}
+
+function PersonModal(props: { isModalOpen: boolean, closeModal: () => void, whoseModal: null | any }) {
+  // const [opened, { open, close }] = useDisclosure(false);
+  // const [loading, { toggle }] = useDisclosure();
+
+  // const [isCorrectPin, setIsCorrectPin] = useState<boolean | null>(null);
+  // const [showNotification, setShowNotification] = useState<boolean | null>(true);
+  // const [didUpdateSucceed, setDidUpdateSucceed] = useState<boolean | undefined>(undefined);
+  
+  // const exclamationMark = <IconExclamationMark />
+
+  // const today = new Date();
+  // const dayNumber = parseInt(String(today.getDate()).padStart(2, '0'));
+
+  // const successIcon = <IconCheck />
+  
+  // const handleUpdateLog = async () => {
+  //   const { status, error } = await supabase
+  //     .from('students')
+  //     .update({ [dayNumber]: true })
+  //     .eq('first_name', props.whoseModal?.first_name)
+      
+  //   if (status === 204) {
+  //     setDidUpdateSucceed(true);
+  //     toggle();
+  //     console.log('loading:', loading)
+  //   }
+  //   if (error !== null) setDidUpdateSucceed(false);
+  // }
+
+  // console.log(today.toDateString())
+
+  // useEffect(() => {
+  //   if (didUpdateSucceed) toggle();
+  // }, [didUpdateSucceed])
 
   return (
     <Modal
@@ -168,7 +229,7 @@ function PersonModal(props: { isModalOpen: boolean, closeModal: () => void, whos
       onClose={props.closeModal}
       title={`Hi ${props.whoseModal?.first_name}, please verify yourself.`}>
       <Center>
-      <Stack>
+      {/* <Stack> */}
       {/* {isCorrectPin !== null &&
       <Notification
         title="Ah Dang!"
@@ -207,10 +268,19 @@ function PersonModal(props: { isModalOpen: boolean, closeModal: () => void, whos
           }
         }}
       /> */}
-      <Button onClick={() => {
-        handleUpdateLog();
-      }}>Update: {today.toDateString()}</Button>
-      </Stack>
+      {/* <Button
+        color="#448C42"
+        loading={loading}
+        leftSection={didUpdateSucceed && successIcon}
+        style={{ pointerEvents: didUpdateSucceed ? 'none' : 'unset' }}
+        onClick={() => {
+          toggle();
+          handleUpdateLog();
+        }}>
+          {didUpdateSucceed ? "Update Successful!" : `Update: ${today.toDateString()}`}
+        </Button> */}
+        <UpdateButton whoseModal={props.whoseModal} />
+      {/* </Stack> */}
       </Center>
     </Modal>
   )
