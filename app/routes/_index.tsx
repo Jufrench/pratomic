@@ -77,19 +77,23 @@ function GridView(props: { openModal: (person: Person) => void }) {
   const rows = people.map((person) => (
     <Table.Tr key={person.firstName}>
       <Table.Td>{person.firstName}</Table.Td>
-      {Object.keys(person).filter(key => key !== 'firstName' && key !== 'pin' && key !== 'color').map(key => {
-        return (
-        <Table.Td key={key}>
-          <Checkbox
-            color={person.color ? person.color : 'gray'}
-            checked={dayNumber >= parseInt((key)) ? person[(key as any)] as boolean : false}
-            onChange={() => {
-              if (dayNumber === parseInt(key)) {
-                props.openModal(person);
-              }
-            }}
-            />
-        </Table.Td>)
+      {Object.keys(person)
+        .filter(key => key !== 'firstName' && key !== 'pin' && key !== 'color')
+        .map(key => {
+        console.log('key ====', key)
+          return (
+            <Table.Td key={key}>
+              <Checkbox
+                color={person.color ? person.color : 'gray'}
+                checked={dayNumber >= parseInt((key)) ? person[(key as any)] as boolean : false}
+                onChange={() => {
+                  if (dayNumber === parseInt(key)) {
+                    props.openModal(person);
+                  }
+                }}
+                />
+            </Table.Td>
+          )
       })}
     </Table.Tr>
   ));
